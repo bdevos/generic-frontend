@@ -8,7 +8,7 @@ ebQuestions.directive('ebQuestionChoice', function () {
     template: '<ul class="eb-question eb-question-choice">' +
       '<li ng-repeat="choice in choices">' +
       '<input type="radio" id="choice-{{ activity.id }}-{{ choice.id }}" name="answer-{{ activity.id }}" ' +
-      'ng-disabled="disabled" ' +
+      'ng-disabled="optionsDisabled" ' +
       'value="{{ choice.id }}" ng-model="activity.value" ng-change="triggerEvent(choice.id)" />' +
       '<label for="choice-{{ activity.id }}-{{ choice.id }}">{{ choice.value[0].text }}</label>' +
       '</li></ul>',
@@ -16,7 +16,7 @@ ebQuestions.directive('ebQuestionChoice', function () {
     scope: {
       choices: '=',
       activity: '=',
-      disabled: '=',
+      optionsDisabled: '=',
       event: '@'
     },
     link: function postLink(scope) {
