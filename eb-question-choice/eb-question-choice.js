@@ -1,1 +1,1 @@
-console.log('Generic question: Choice');
+console.log('Generic question: Choice, with added features');
