@@ -1,0 +1,27 @@
+.eb-question-choice {
+  margin: 20px 0 0 0;
+  font-size: 16px;
+
+  li {
+    margin: 10px 30px 0 0;
+  }
+  input[type=radio] {
+    display:none;
+    margin:10px;
+  }
+  input[type=radio] + label {
+    display:inline-block;
+    padding: 5px 0 5px 46px;
+    margin-left: 20px;
+    background: transparent url(../images/radio_btn.svg) no-repeat center left;
+    background-size: 25px 25px;
+    color: #142e66;
+    cursor: pointer;
+  }
+  input[type=radio]:disabled + label {
+    cursor: default;
+  }
+  input[type=radio]:checked + label {
+    background-image: url(../images/radio_btn_fill.svg);
+  }
+}
