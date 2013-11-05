@@ -23,7 +23,6 @@ module.exports = function (grunt) {
   var hostname = grunt.option('hostname') || '0.0.0.0';
 
   var lrSnippet = require('connect-livereload')({ port: reloadPort });
-  var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
 
   grunt.initConfig({
     yeoman: config,
@@ -47,15 +46,6 @@ module.exports = function (grunt) {
       }
     },
     connect: {
-      proxies: [
-        {
-          context: '/api',
-          host: 'localhost',
-          port: 9101,
-          https: false,
-          changeOrigin: true
-        }
-      ],
       options: {
         port: serverPort,
         hostname: hostname
@@ -64,7 +54,6 @@ module.exports = function (grunt) {
         options: {
           middleware: function (connect) {
             return [
-              proxySnippet,
               lrSnippet,
               mountFolder(connect, config.tmp),
               mountFolder(connect, config.app)
@@ -76,19 +65,7 @@ module.exports = function (grunt) {
         options: {
           middleware: function (connect) {
             return [
-              proxySnippet,
               mountFolder(connect, config.dist)
-            ];
-          }
-        }
-      },
-      test: {
-        options: {
-          port: 9121,
-          middleware: function (connect) {
-            return [
-              mountFolder(connect, config.tmp),
-              mountFolder(connect, 'test')
             ];
           }
         }
@@ -112,16 +89,6 @@ module.exports = function (grunt) {
         '<%= yeoman.app %>/scripts/{,*/}*.js',
       ]
     },
-    karma: {
-      e2e: {
-        configFile: 'karma-e2e.conf.js',
-        singleRun: true
-      },
-      unit: {
-        configFile: 'karma.conf.js',
-        singleRun: true
-      }
-    },
     autoprefixer: {
       options: ['last 1 version'],
       dist: {
@@ -131,27 +98,6 @@ module.exports = function (grunt) {
           src: '{,*/}*.css',
           dest: '<%= yeoman.tmp %>/styles/'
         }]
-      }
-    },
-    ngtemplates: {
-      app: {
-        options: {
-          base: '<%= yeoman.app %>',
-          module: 'p3WebApp',
-          concat: 'dist/scripts/scripts.js',
-          htmlmin: {
-            collapseBooleanAttributes: true,
-            collapseWhitespace: true,
-            removeAttributeQuotes: true,
-            removeComments: true,
-            removeEmptyAttributes: false,
-            removeRedundantAttributes: true,
-            removeScriptTypeAttributes: true,
-            removeStyleLinkTypeAttributes: true
-          }
-        },
-        src: [ '<%= yeoman.app %>/views/**.html', '<%= yeoman.app %>/views/**/**.html'],
-        dest: '<%= yeoman.tmp %>/scripts/templates.js'
       }
     },
     compass: {
@@ -299,20 +245,9 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('server', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run([
-        'build',
-        'open',
-        'configureProxies',
-        'connect:dist:keepalive'
-      ]);
-    }
-
     grunt.task.run([
       'clean:runtime',
       'useminPrepare',
-      'ngtemplates:app',
-      'configureProxies',
       'compass',
       'autoprefixer',
       'connect:livereload',
@@ -321,24 +256,10 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', [
-    'clean',
-    'compass',
-    'connect:test',
-    'karma:unit'
-  ]);
-
-  grunt.registerTask('test:e2e', [
-    'clean',
-    'compass',
-    'karma:e2e'
-  ]);
-
   grunt.registerTask('build', [
     'clean',
     'useminPrepare',
     'jshint:app',
-    'ngtemplates:app',
     'concat',
     'compass',
     'copy',
@@ -354,8 +275,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('local', [
-    'jshint:app',
-    'test'
+    'jshint:app'
   ]);
 
   grunt.registerTask('default', [
