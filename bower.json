@@ -1,0 +1,11 @@
+{
+  "name": "edubase-frontend-components",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "1.2.0-rc.3",
+    "angular-route": "1.2.0-rc.3",
+    "json3": "~3.2.4",
+    "jquery": "~2.0.3",
+    "es5-shim": "~2.1.0"
+  }
+}
