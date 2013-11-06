@@ -1,8 +1,8 @@
 'use strict';
 
-var frontendComponentsApp = angular.module('frontendComponentsApp', [ 'ngRoute' ]);
+var frontendComponentsApp = angular.module('frontendComponentsApp', [ 'ngRoute', 'edubaseComponents' ]);
 
-frontendComponentsApp.config(function ($routeProvider) {
+frontendComponentsApp.config(function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       templateUrl: 'views/overview.html',
@@ -11,4 +11,5 @@ frontendComponentsApp.config(function ($routeProvider) {
     .otherwise({
       redirectTo: '/'
     });
+  $locationProvider.html5Mode(true);
 });

@@ -15,7 +15,8 @@ module.exports = function (grunt) {
   var config = {
     app: 'app',
     dist: 'dist',
-    tmp: '.tmp'
+    tmp: '.tmp',
+    components: '../components'
   };
 
   var serverPort = grunt.option('serverPort') || 9021;
@@ -56,16 +57,20 @@ module.exports = function (grunt) {
             return [
               lrSnippet,
               mountFolder(connect, config.tmp),
-              mountFolder(connect, config.app)
+              mountFolder(connect, config.app),
+              mountFolder(connect, config.components)
             ];
           }
         }
       },
-      dist: {
+      test: {
         options: {
+          port: 9121,
           middleware: function (connect) {
             return [
-              mountFolder(connect, config.dist)
+              mountFolder(connect, config.tmp),
+              mountFolder(connect, config.components),
+              mountFolder(connect, 'test')
             ];
           }
         }
@@ -77,9 +82,7 @@ module.exports = function (grunt) {
       }
     },
     clean: {
-      app: [parent(config.app) + '/coverage'],
-      dist: config.dist,
-      runtime: [config.tmp, '.sass-cache', 'coverage']
+      runtime: [config.tmp, '.sass-cache']
     },
     jshint: {
       options: {
@@ -87,7 +90,18 @@ module.exports = function (grunt) {
       },
       app: [
         '<%= yeoman.app %>/scripts/{,*/}*.js',
+        '<%= yeoman.components %>/{,*/}*.js'
       ]
+    },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js'
+      },
+      continuous: {
+        configFile: 'karma.conf.js',
+        singleRun: false,
+        autoWatch: true
+      }
     },
     autoprefixer: {
       options: ['last 1 version'],
@@ -113,133 +127,16 @@ module.exports = function (grunt) {
         relativeAssets: false,
         require: './compass/extensions/base64_encode.rb'
       },
-      dist: {},
       server: {
         options: {
           debugInfo: true
         }
       }
     },
-    copy: {
-      app: {
-        files: [
-          {
-            expand: true,
-            dot: true,
-            cwd: '<%= yeoman.app %>',
-            dest: '<%= yeoman.dist %>',
-            src: [
-              '*.{ico,png,txt}',
-              '.htaccess',
-              'bower_components/**/*',
-              'images/{,*/}*.{gif,webp,svg}'
-            ]
-          },
-          {
-            expand: true,
-            cwd: '.tmp/images',
-            dest: '<%= yeoman.dist %>/images',
-            src: [
-              'generated/*'
-            ]
-          }
-        ]
-      }
-    },
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
       options: {
         dest: '<%= yeoman.dist %>'
-      }
-    },
-    imagemin: {
-      app: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= yeoman.app %>/images',
-            src: '{,*/}*.{png,jpg,jpeg}',
-            dest: '<%= yeoman.dist %>/images'
-          }
-        ]
-      }
-    },
-    svgmin: {
-      dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= yeoman.app %>/images',
-            src: '{,*/}*.svg',
-            dest: '<%= yeoman.dist %>/images'
-          }
-        ]
-      }
-    },
-    htmlmin: {
-      app: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= yeoman.app %>',
-            src: '*.html',
-            dest: '<%= yeoman.dist %>'
-          }
-        ]
-      }
-    },
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
-    },
-    ngmin: {
-      dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= yeoman.dist %>/scripts',
-            src: '*.js',
-            dest: '<%= yeoman.dist %>/scripts'
-          }
-        ]
-      }
-    },
-    cssmin: {
-      dist: {
-        files: {
-          '<%= yeoman.dist %>/styles/main.css': [
-            '<%= yeoman.tmp %>/styles/main.css',
-            '<%= yeoman.dist %>/styles/main.css'
-          ]
-        }
-      }
-    },
-    uglify: {
-      dist: {
-        files: {
-          '<%= yeoman.dist %>/scripts/scripts.js': [
-            '<%= yeoman.dist %>/scripts/scripts.js'
-          ]
-        }
-      }
-    },
-    rev: {
-      dist: {
-        files: {
-          src: [
-            '<%= yeoman.dist %>/scripts/{,*/}*.js',
-            '<%= yeoman.dist %>/styles/{,*/}*.css',
-            '<%= yeoman.dist %>/images/*.{png,jpg,jpeg,gif,webp,svg}'
-          ]
-        }
-      }
-    },
-    usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
-      options: {
-        dirs: ['<%= yeoman.dist %>']
       }
     }
   });
@@ -256,30 +153,24 @@ module.exports = function (grunt) {
     ]);
   });
 
+  grunt.registerTask('test', [
+    'clean',
+    'compass',
+    'connect:test',
+    'karma:continuous'
+  ]);
+
   grunt.registerTask('build', [
     'clean',
     'useminPrepare',
     'jshint:app',
-    'concat',
     'compass',
-    'copy',
     'autoprefixer',
-    'imagemin',
-    'htmlmin',
-    'cdnify',
-    'ngmin',
-    'cssmin',
-    'uglify',
-    'rev',
-    'usemin',
-  ]);
-
-  grunt.registerTask('local', [
-    'jshint:app'
+    'connect:test',
+    'karma:unit'
   ]);
 
   grunt.registerTask('default', [
-    'local',
     'build'
   ]);
 };

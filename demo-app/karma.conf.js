@@ -1,29 +1,23 @@
 // Karma configuration
 
 // base path, that will be used to resolve files and exclude
-basePath = 'app';
+basePath = '../';
 
 // list of files / patterns to load in the browser
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'bower_components/angular/angular.js',
-  'bower_components/angular-i18n/angular-locale_nl-nl.js',
-  'bower_components/angular-route/angular-route.js',
-  'bower_components/angular-resource/angular-resource.js',
-  'bower_components/angular-sanitize/angular-sanitize.js',
-  'bower_components/angular-touch/angular-touch.js',
-  'bower_components/angular-mocks/angular-mocks.js',
-  'bower_components/generic-frontend/eb-question-choice/eb-question-choice.js',
-  'scripts/*.js',
-  'scripts/**/*.js',
-  '../test/spec/**/*.js',
-  'views/**/*.html'
+  'demo-app/app/bower_components/jquery/jquery.js',
+  'demo-app/app/bower_components/angular/angular.js',
+  'demo-app/app/bower_components/angular-route/angular-route.js',
+  'demo-app/app/bower_components/angular-mocks/angular-mocks.js',
+  'demo-app/app/scripts/{,*/}*.js',
+  'components/eb-component-choice/eb-component-choice.js',
+  'test/{,*/}*.spec.js'
 ];
 
 preprocessors = {
-  'scripts/**/*.js': 'coverage',
-  'views/**/*.html': 'html2js'
+  'demo-app/app/views/**/*.html': 'html2js'
 };
 
 // list of files to exclude
@@ -31,16 +25,7 @@ exclude = [];
 
 // test results reporter to use
 // possible values: dots || progress || growl
-reporters = ['dots', 'junit', 'coverage'];
-
-junitReporter = {
-  outputFile: '../target/surefire-reports/TEST-karma.xml'
-};
-
-coverageReporter = {
-  type : 'lcov',
-  dir : '../target/coverage/'
-}
+reporters = ['dots'];
 
 // web server port
 port = 8080;

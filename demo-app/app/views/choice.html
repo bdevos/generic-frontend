@@ -1,0 +1,32 @@
+<div ng-controller="ChoiceCtrl">
+  <h2>Choice component</h2>
+  <div ng-repeat="choice in choices">
+    <h3>{{ choice.name }}</h3>
+    <edubase-component-choice choices="choice.choices" 
+                        activity="choice.activity" 
+                        options-disabled="choice.optionsDisabled" 
+                        event="questionChoiceTrigger"></edubase-component-choice>
+    <h4>Value</h4>
+    <p>{{ choice.activity.value }}</p>
+    <h4>Disabled</h4>
+    <p>
+      <span>Current state:</span>
+      <span ng-switch="choice.optionsDisabled">
+        <span ng-switch-when="true">disabled</span>
+        <span ng-switch-when="false">enabled</span>
+      </span>
+      [<a href="" ng-click="choice.optionsDisabled = !choice.optionsDisabled">switch</a>]
+    </p>
+    <h4>Data structure</h4>
+    <dl>
+      <dt>choices</dt>
+      <dd>{{ choice.choices }}</dd>
+      <dt>activity</dt>
+      <dd>{{ choice.activity }}</dd>
+      <dt>optionsDisabled</dt>
+      <dd>{{ choice.optionsDisabled }}</dd>
+    </dl>
+
+    <hr />
+  </div>
+</div>

@@ -1,5 +1,8 @@
 'use strict';
 
 frontendComponentsApp.controller('OverviewCtrl', function ($scope) {
-  console.log('Overview');
+  $scope.questionTypes = [{
+    name: 'choice',
+    url: 'views/choice.html'
+  }];
 });

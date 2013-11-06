@@ -1,3 +1,22 @@
-<div>
-  <h1>Overview</h1>
+<div class="header">
+	<div class="grid">
+		<div class="logo"></div>
+		<ul>
+			<li><a href="https://github.com/MalmbergUitgeverij/edubase-frontend-components">Github</a></li>
+		</ul>
+	</div>
+</div>
+<div class="content">
+	<div class="grid">
+		<h1>Edubase Frontend Components</h1>
+
+    <p>
+      Select frontend component: <select ng-model="activeType" ng-options="type.name for type in questionTypes" required=""></select>
+    </p>
+
+    <hr/>
+		
+		<ng-include src="activeType.url"/>
+
+	</div>
 </div>
